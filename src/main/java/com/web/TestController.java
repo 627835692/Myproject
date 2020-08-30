@@ -21,7 +21,7 @@ public class TestController {
     @ResponseBody
     public void test() {
         User user = new User();
-        user.setName("张康");
+        user.setName("测试");
         user.setAddress("上海");
         user.setCreateTime(new Date());
         userService.add(user);
