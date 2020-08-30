@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="PROJECT_NAME">projectName</Property>
+        <Property name="LOG_HOME">/projectName/log</Property>
+    </Properties>
+ <!--   <Filter type="ThresholdFilter" level="debug"/>-->
+
+    <Appenders>
+      <!--  RollingFile节点用来定义超过指定大小自动删除旧的创建新的的Appender.
+        name:指定Appender的名字.
+        fileName:指定输出日志的目的文件带全路径的文件名.
+        PatternLayout:输出格式，不设置默认为:%m%n.
+        filePattern:指定新建日志文件的名称格式.
+        Policies:指定滚动日志的策略，就是什么时候进行新建日志文件输出日志.
+        TimeBasedTriggeringPolicy:Policies子节点，基于时间的滚动策略，interval属性用来指定多久滚动一次，默认是1 hour。modulate=true用来调整时间：比如现在是早上3am，interval是4，那么第一次滚动是在4am，接着是8am，12am...而不是7am.
+        SizeBasedTriggeringPolicy:Policies子节点，基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小.
+        DefaultRolloverStrategy:用来指定同一个文件夹下最多有几个日志文件时开始删除最旧的，创建新的(通过max属性)。-->
+        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月 -->
+        <RollingFile
+              name="FILE"
+              fileName="${LOG_HOME}/${PROJECT_NAME}.log}"
+              filePattern="${LOG_HOME}/${PROJECT_NAME}.%d{yyyy-MM-dd}-%i.log.gz"
+              ignoreException="false">
+          <!-- 日志输出格式
+              %d{yyyy-MM-dd HH:mm:ss.SSS} 表示输出到毫秒的时间
+              %t 输出当前线程名称
+              %-5level 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+              %logger 输出logger名称，因为Root Logger没有名称，所以没有输出
+              %msg 日志文本
+              %n 换行
+              其他常用的占位符有：
+              %F 输出所在的类文件名，如Log4j2Test.java
+              %L 输出行号
+              %M 输出所在方法名
+              %l 输出语句所在的行数, 包括类名、方法名、文件名、行数-->
+              <PatternLayout>
+                  <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"</Pattern>
+              </PatternLayout>
+               <!-- 定义文件最大大小 -->
+              <Policies>
+                  <OnStartupTriggeringPolicy />
+                  <TimeBasedTriggeringPolicy />
+                  <SizeBasedTriggeringPolicy size="100 MB" />
+              </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件 -->
+              <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+          <!--输出控制台的配置-->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+        <!-- 日志输出格式 -->
+        <PatternLayout>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"</Pattern>
+        </PatternLayout>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="FILE" />
+            <AppenderRef ref="CONSOLE" />
+        </Root>
+    </Loggers>
+
+</Configuration>
